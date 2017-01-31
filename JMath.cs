@@ -35,5 +35,14 @@ public static class JMath
             rngs[name] = new System.Random();
         }
     }
+
+    public static void Bound(ref int x, int low, int high)
+    {
+        if (x < low) {
+            x = low;
+        } else if (x > high) {
+            x = high;
+        }
+    }
 }
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+public enum EaseType { In, Out, Both, None }
+
 public abstract class Motion : MonoBehaviour
 {
     public int FrameDelay = 0;
@@ -28,7 +30,10 @@ public abstract class Motion : MonoBehaviour
         }
     }
 
-    public static T[] InvokeChain<T>(Func<T, UnityEvent> invoker, params T[] motions)
+    /// <summary>
+    /// chain each linked motion to a Event from the previous
+    /// </summary>
+    public static T[] CreateInvokeChain<T>(Func<T, UnityEvent> invoker, params T[] motions)
         where T : Motion
     {
         JLib.For(1, motions.Length - 1, (i) =>

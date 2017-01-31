@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum EaseType { In, Out, Both, None }
-
 public abstract class VectorTargetBase : Motion
 {
     private static readonly Dictionary<EaseType, Func<VectorTargetBase, Vector4>> _vectorChange = new Dictionary<EaseType, Func<VectorTargetBase, Vector4>>{
@@ -32,7 +30,7 @@ public abstract class VectorTargetBase : Motion
     protected Action<Vector4> _setVector;
 
     protected Vector4 _start;
-    protected Vector4 _target = Vector4.zero;
+    protected Vector4 _target;
     protected Vector4 _lastChange;
     protected int _time;
     protected int _maxTime = 30;
@@ -49,8 +47,8 @@ public abstract class VectorTargetBase : Motion
 
     /// <param name="axes">default: all</param>
     /// <param name="drift">distance to drift</param>
-    protected virtual VectorTargetBase Init(Func<Vector4> getVector = null, Action<Vector4> setVector = null, Vector4? target = null, 
-        int? time = null, Vector4? axes = null, EaseType? easing = null, UnityEvent invoker = null)
+    protected virtual VectorTargetBase Init(Func<Vector4> getVector = null, Action<Vector4> setVector = null, 
+        Vector4? target = null,  int? time = null, Vector4? axes = null, EaseType? easing = null, UnityEvent invoker = null)
     {
         Init(invoker);
 

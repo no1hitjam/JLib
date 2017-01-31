@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
+public enum Axis { X, Y, Z, W };
+
 public static class JLib
 {
     // -- enums --
@@ -32,13 +34,23 @@ public static class JLib
         return new Vector4(v.Value.x < .0001 ? 0 : 1, v.Value.y < .0001 ? 0 : 1, v.Value.z < .0001 ? 0 : 1, v.Value.w < .0001 ? 0 : 1);
     }
 
+    public static Vector4 GetAxes(Axis axis)
+    {
+        switch (axis) {
+            case Axis.Y: return new Vector4(0, 1, 0, 0);
+            case Axis.Z: return new Vector4(0, 0, 1, 0);
+            case Axis.W: return new Vector4(0, 0, 0, 1);
+        }
+        return new Vector4(1, 0, 0, 0);
+    }
+
     // -- JBehaviour --
 
     public static T New<T>(string name = "New GameObject") 
         where T : Component
     {
         var component = new GameObject().AddComponent<T>();
-        component.Add<ID>().SetBaseName(name);
+        component.Add<ID>().Init(name);
         return component;
     }
 

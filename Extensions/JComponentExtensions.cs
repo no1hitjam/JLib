@@ -3,9 +3,14 @@ using UnityEngine;
 
 public static class JComponentExtensions
 {
+    public static T Add<T>(this GameObject gameObject)
+        where T : Component
+    {
+        return gameObject.AddComponent<T>();
+    }
     
     public static T Add<T>(this Component component)
-        where T : MonoBehaviour
+        where T : Component
     {
         return component.gameObject.AddComponent<T>();
     }
@@ -17,7 +22,7 @@ public static class JComponentExtensions
     }
 
     public static T GetOrAdd<T>(this Component component)
-        where T : MonoBehaviour
+        where T : Component
     {
         if (component.Get<T>()) {
             return component.Get<T>();
@@ -67,6 +72,20 @@ public static class JComponentExtensions
     public static void SetScale(this Component component, Func<Vector3,Vector3> scale)
     {
         component.transform.localScale = scale(component.transform.localScale);
+    }
+    
+    /// <param name="angle">degrees</param>
+    public static void Rotate2D(this Component component, float angle, bool fromIdentity = true)
+    {
+        if (fromIdentity) {
+            component.transform.rotation = Quaternion.identity;
+        }
+        component.transform.Rotate(Vector3.forward, angle);
+    }
+
+    public static float GetRotation2D(this Component component)
+    {
+        return component.transform.eulerAngles.z;
     }
     
     

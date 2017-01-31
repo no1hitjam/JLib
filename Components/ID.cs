@@ -6,15 +6,15 @@ public class ID : MonoBehaviour
     private string _name = "";
     private int? _listIndex = null;
 
-    public void SetBaseName(string baseName)
+    public void Init(string baseName)
     {
-        this._name = baseName;
+        _name = baseName;
         DisplayName();
     }
 
     public void SetListIndex(int? listIndex)
     {
-        this._listIndex = listIndex;
+        _listIndex = listIndex;
         DisplayName();
     }
 
