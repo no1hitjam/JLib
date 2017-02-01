@@ -55,7 +55,7 @@ public static class JLib
     }
 
     // -- iteration --
-    public static void For(int iterations, UnityAction<int> action)
+    /*public static void For(int iterations, UnityAction<int> action)
     {
         For(0, iterations, action);
     }
@@ -66,11 +66,45 @@ public static class JLib
         for (int i = start; i < start + iterations; i++) {
             action(i);
         }
+    }*/
+
+    public static void ForEach<T>(Action<int, T> action, params T[][] arrays)
+    {
+        foreach (var array in arrays) {
+            for (int i = 0; i < array.Length; i++) {
+                action(i, array[i]);
+            }
+        }
+    }
+
+    public static void ForEach<T>(Action<int, T> action, params List<T>[] lists)
+    {
+        foreach (var list in lists) {
+            for (int i = 0; i < list.Count; i++) {
+                action(i, list[i]);
+            }
+        }
     }
 }
 
 
-public interface Copyable<T>
+public interface ICopyable<T>
 {
     T Copy(T from);
 }
+
+public class Pair<T, U>
+{
+    public Pair()
+    {
+    }
+
+    public Pair(T first, U second)
+    {
+        First = first;
+        Second = second;
+    }
+
+    public T First { get; set; }
+    public U Second { get; set; }
+};

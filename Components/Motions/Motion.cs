@@ -36,10 +36,9 @@ public abstract class Motion : MonoBehaviour
     public static T[] CreateInvokeChain<T>(Func<T, UnityEvent> invoker, params T[] motions)
         where T : Motion
     {
-        JLib.For(1, motions.Length - 1, (i) =>
-        {
+        for (int i = 1; i < motions.Length - 1; i++) {
             motions[i].Init(invoker(motions[i - 1]));
-        });
+        }
         motions[0].Init(invoker(motions[motions.Length - 1]));
         motions[0].OnInvoked();
         return motions;

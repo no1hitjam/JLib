@@ -22,7 +22,15 @@ public static class JListExtensions
     {
         for (var i = 0; i < count; i++) {
             list.AddComponent(constructor(list.Count));
-            list.Get(-1).GetOrAdd<ID>().SetListIndex(list.Count - 1);
+        }
+        return list;
+    }
+
+    public static List<T> AddComponents<T>(this List<T> list, params T[] components)
+        where T : Component
+    {
+        foreach (var component in components) {
+            list.AddComponent(component);
         }
         return list;
     }

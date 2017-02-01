@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public abstract class VectorTargetBase : Motion
+public abstract class FloatTargetBase : Motion
 {
-    private static readonly Dictionary<EaseType, Func<VectorTargetBase, Vector4>> _vectorChange = new Dictionary<EaseType, Func<VectorTargetBase, Vector4>>{
-        { EaseType.None, (VectorTargetBase b) => {
+    private static readonly Dictionary<EaseType, Func<FloatTargetBase, float>> _floatChange = new Dictionary<EaseType, Func<FloatTargetBase, float>>{
+        { EaseType.None, (FloatTargetBase b) => {
             return b.Difference * b.TimeProportion;
         } },
-        { EaseType.In, (VectorTargetBase b) => {
+        { EaseType.In, (FloatTargetBase b) => {
             return b.Difference * Mathf.Pow(b.TimeProportion, 2);
         } },
-        { EaseType.Out, (VectorTargetBase b) => {
+        { EaseType.Out, (FloatTargetBase b) => {
             return -b.Difference * b.TimeProportion * (b.TimeProportion - 2);
         } },
-        { EaseType.Both, (VectorTargetBase b) => {
+        { EaseType.Both, (FloatTargetBase b) => {
             if (b.TimeProportion < .5f) {
                 return b.Difference * Mathf.Pow(b.TimeProportion, 2) * 2;
             }
@@ -26,21 +26,21 @@ public abstract class VectorTargetBase : Motion
     protected UnityEvent _onEnd;
     public UnityEvent OnEnd { get { return _onEnd; } }
 
-    protected Func<Vector4> _getVector;
-    protected Action<Vector4> _setVector;
+    protected Func<float> _getFloat;
+    protected Action<float> _setFloat;
 
-    protected Vector4 _start;
-    protected Vector4 _target;
-    protected Vector4 _lastChange;
+    protected float _start;
+    protected float _target;
+    protected float _lastChange;
     protected int _time;
     protected int _maxTime = 30;
     private int _originalTime = 30;
     private bool _multiplyTimeByDistance = false;
     protected EaseType _easing = EaseType.Out;
     protected Vector4 _axes = JLib.AxesAll;
-    
+
     public float TimeProportion { get { return (float)_time / _maxTime; } }
-    public Vector4 Difference { get { return _target.NewScale(_axes) - _start.NewScale(_axes); } }
+    public float Difference { get { return _target - _start; } }
 
     public void Awake()
     {
@@ -49,26 +49,25 @@ public abstract class VectorTargetBase : Motion
 
     /// <param name="axes">default: all</param>
     /// <param name="drift">distance to drift</param>
-    protected virtual VectorTargetBase Init(Func<Vector4> getVector = null, Action<Vector4> setVector = null, 
-        Vector4? target = null,  int? time = null, Vector4? axes = null, EaseType? easing = null, bool? multiplyTimeByDistance = null, UnityEvent invoker = null)
+    protected virtual FloatTargetBase Init(Func<float> getFloat = null, Action<float> setFloat = null,
+        float? target = null, int? time = null, EaseType? easing = null, bool? multiplyTimeByDistance = null, UnityEvent invoker = null)
     {
         Init(invoker);
 
-        _getVector = getVector ?? _getVector;
-        _start = _getVector();
-        _lastChange = Vector4.zero;
-        _setVector = setVector ?? _setVector;
+        _getFloat = getFloat ?? _getFloat;
+        _start = _getFloat();
+        _lastChange = 0;
+        _setFloat = setFloat ?? _setFloat;
         _target = target ?? _target;
 
         _originalTime = time ?? _originalTime;
         _multiplyTimeByDistance = multiplyTimeByDistance ?? _multiplyTimeByDistance;
         if (_multiplyTimeByDistance) {
-            _maxTime = (int)(_originalTime * Mathf.Pow(Vector4.Distance(_target, _getVector()), 2));
+            _maxTime = (int)(_originalTime * Mathf.Pow(_target - _getFloat(), 2));
         } else {
             _maxTime = _originalTime;
         }
-
-        _axes = axes ?? _axes;
+        
         _easing = easing ?? _easing;
 
         _time = -1;
@@ -78,7 +77,7 @@ public abstract class VectorTargetBase : Motion
 
         return this;
     }
-    
+
     public virtual void Update()
     {
         if (ActiveFrame) {
@@ -87,8 +86,8 @@ public abstract class VectorTargetBase : Motion
                     _onEnd.Invoke();
                 }
                 // WARNING: This method loses some floating point data (is slightly innacurate)
-                var newChange = _vectorChange[_easing](this);
-                _setVector(_getVector() + newChange - _lastChange);
+                var newChange = _floatChange[_easing](this);
+                _setFloat(_getFloat() + newChange - _lastChange);
                 _lastChange = newChange;
                 _time++;
             }
@@ -99,5 +98,4 @@ public abstract class VectorTargetBase : Motion
     {
         _time = -1;
     }
-
 }

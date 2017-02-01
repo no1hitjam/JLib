@@ -3,13 +3,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
-public class ColorTarget : VectorTargetBase, Copyable<ColorTarget>
+public class ColorTarget : VectorTargetBase, ICopyable<ColorTarget>
 {
     
-    public ColorTarget Init(Color target, int? time = null, Color? colorAxes = null, EaseType? easing = null, 
+    public ColorTarget Init(Color target, int? time = null, Color? colorAxes = null, EaseType? easing = null, bool? multiplyTimeByDistance = null,
         UnityEvent invoker = null)
     {
-        base.Init(null, null, target, time, colorAxes, easing, invoker);
+        base.Init(null, null, target, time, colorAxes, easing, multiplyTimeByDistance, invoker);
 
         if (this.Get<SpriteRenderer>()) {
             _setVector = (color) => { this.Get<SpriteRenderer>().color = color; };
@@ -30,7 +30,7 @@ public class ColorTarget : VectorTargetBase, Copyable<ColorTarget>
 
     public ColorTarget Copy(ColorTarget from)
     {
-        return Init(from._target, from._maxTime, from._axes, from._easing, null);
+        return Init(from._target, from._maxTime, from._axes, from._easing, false, null);
     }
 
     public override void Update()

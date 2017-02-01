@@ -9,29 +9,35 @@ public class FloatLock : Motion
     protected Func<float> _getFloat;
     protected Action<float> _setFloat;
 
-    protected float _target = 0; 
-    protected float _speed = .1f;
-    protected bool _eased = true;
+    public float Target = 0; 
+    public float Speed = .1f;
+    public bool Eased = true;
+    public float OverStep = 0;
+    private float _lastOverStepMove = 0;
 
     public FloatLock Init(Func<float> getFloat = null, Action<float> setFloat = null, 
-        float? target = null, float? speed = null, bool? eased = null)
+        float? target = null, float? speed = null, bool? eased = null, float? overStep = null)
     {
         _getFloat = getFloat ?? _getFloat;
         _setFloat = setFloat ?? _setFloat;
-        _target = target ?? _target;
-        _speed = speed ?? _speed;
-        _eased = eased ?? _eased;
-        
+        Target = target ?? Target;
+        Speed = speed ?? Speed;
+        Eased = eased ?? Eased;
+        OverStep = overStep ?? OverStep;
+
         return this;
     }
 
+
+    // TODO: Do Eased
     public virtual void Update()
     {
-        if (ActiveFrame) {
-            _setFloat((_target - _getFloat()) * _speed + _getFloat());
+        if (ActiveFrame && Target != _getFloat()) {
+            var move = (Target - _getFloat()) * Speed;
+            var overStepMove = move * OverStep + _lastOverStepMove * .9f;
+            _lastOverStepMove = overStepMove;
+            _setFloat(move + overStepMove + _getFloat());
         }
-
-        // TODO: eased set to false
     }
 
 

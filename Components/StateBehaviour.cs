@@ -3,23 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public abstract class StateBehaviour<T> : MonoBehaviour
+public class State<StateType> : MonoBehaviour
 {
-    private T _state = default(T);
-    private List<T> _nextStates = new List<T>();
+    private StateType _state = default(StateType);
+    private List<StateType> _nextStates = new List<StateType>();
     private int _time = 0;
     private bool _changing = true;
     private bool _initDone = false;
     private bool _exitDone = true;
-    private Dictionary<T, StateFunctions> _functions;
+    private Dictionary<StateType, StateFunctions> _functions;
 
-    public void Init(Dictionary<T, StateFunctions> functions)
+    public State<StateType> Init(Dictionary<StateType, StateFunctions> functions)
     {
-        _nextStates = new List<T> { _state };
+        _nextStates = new List<StateType> { _state };
         _functions = functions;
+
+        return this;
     }
 
-    public void ChangeState(T next_state)
+    public void ChangeState(StateType next_state)
     {
         _nextStates.Add(next_state);
         if (!_changing) {
@@ -82,12 +84,12 @@ public abstract class StateBehaviour<T> : MonoBehaviour
         return _state.ToString();
     }
 
-    public T State
+    public StateType CurrentState
     {
         get { return _state; }
     }
 
-    public T NextState
+    public StateType NextState
     {
         get { return _nextStates[0]; }
     }

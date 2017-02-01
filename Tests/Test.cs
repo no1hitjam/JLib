@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR
+
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class Test : StateBehaviour<Test.S>
+public class Test : State<Test.S>
 {
     public enum S { TestState };
 
@@ -46,3 +48,5 @@ public class Test : StateBehaviour<Test.S>
         base.Update();
     }
 }
+
+#endif

@@ -31,7 +31,7 @@ public static class JComponentExtensions
     }
 
     public static T Copy<T>(this Component component, T copy)
-        where T : MonoBehaviour, Copyable<T>
+        where T : MonoBehaviour, ICopyable<T>
     {
         return component.Add<T>().Copy(copy);
     }
