@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class State<StateType> : MonoBehaviour
+public class State<StateType>
 {
     private StateType _state = default(StateType);
     private List<StateType> _nextStates = new List<StateType>();
@@ -13,12 +13,10 @@ public class State<StateType> : MonoBehaviour
     private bool _exitDone = true;
     private Dictionary<StateType, StateFunctions> _functions;
 
-    public State<StateType> Init(Dictionary<StateType, StateFunctions> functions)
+    public State(Dictionary<StateType, StateFunctions> functions)
     {
         _nextStates = new List<StateType> { _state };
         _functions = functions;
-
-        return this;
     }
 
     public void ChangeState(StateType next_state)
@@ -48,7 +46,7 @@ public class State<StateType> : MonoBehaviour
         _time = 0;
     }
 
-    public virtual void Update()
+    public void Update()
     {
         if (_functions != null && _functions.ContainsKey(_state)) {
             if (_changing) {
@@ -69,11 +67,16 @@ public class State<StateType> : MonoBehaviour
         _time++;
     }
 
+    public void Input(InputData data)
+    {
+        _functions[_state].Input(data);
+    }
+
     // TODO: Attach this to invoker
     private void TouchInput(InputData data)
     {
-        if (_functions[_state].TouchInput != null)
-            _functions[_state].TouchInput(data);
+        if (_functions[_state].Input != null)
+            _functions[_state].Input(data);
     }
 
     public string StateString()
@@ -110,5 +113,5 @@ public struct StateFunctions
 {
     public Func<bool> Init, Exit;
     public Action Update;
-    public UnityAction<InputData> TouchInput;
+    public UnityAction<InputData> Input;
 }

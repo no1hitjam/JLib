@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class Test : State<Test.S>
+public class Test : MonoBehaviour
 {
     public enum S { TestState };
 
@@ -43,9 +43,9 @@ public class Test : State<Test.S>
         Motion.CreateInvokeChain((m) => m.OnEnd, posTarget3, test_renderers[3].Copy(posTarget3).Init(Vector3.zero));
     }
 
-    public override void Update()
+    public void Update()
     {
-        base.Update();
+
     }
 }
 

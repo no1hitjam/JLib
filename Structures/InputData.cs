@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public enum Dir { Right = 0, Up = 90, Left = 180, Down = 270 };
 public enum DDir { Right = 0, UpRight = 45, Up = 90, UpLeft = 135,
@@ -45,3 +46,6 @@ public struct InputData
 
 
 }
+
+[System.Serializable]
+public class InputDataEvent : UnityEvent<InputData> { }
