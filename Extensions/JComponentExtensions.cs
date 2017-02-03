@@ -3,6 +3,12 @@ using UnityEngine;
 
 public static class JComponentExtensions
 {
+    public static GameObject Init(this GameObject gameObject, Transform parent)
+    {
+        gameObject.transform.SetParent(parent, false);
+        return gameObject;
+    }
+
     public static T Add<T>(this GameObject gameObject)
         where T : Component
     {

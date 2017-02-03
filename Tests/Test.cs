@@ -15,9 +15,9 @@ public class Test : MonoBehaviour
             { S.TestState, new StateFunctions { } }
         });*/
 
-        var test_renderers = new List<SpriteRenderer>().AddComponents(4, (i) =>
+        /*var test_renderers = new List<SpriteRenderer>().AddComponents(4, (i) =>
         {
-            var r = JLib.New<SpriteRenderer>("PosTarget Test").Init(null, AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Knob.psd"));
+            var r = new GameObject().Add<SpriteRenderer>().Init(null, "ball", AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Knob.psd"));
             r.transform.localPosition = new Vector3(0, -i * 1);
             return r;
         });
@@ -40,7 +40,7 @@ public class Test : MonoBehaviour
         Motion.CreateInvokeChain((m) => m.OnEnd, posTarget2, test_renderers[2].Copy(posTarget2).Init(Vector3.zero));
 
         var posTarget3 = test_renderers[3].Add<PosTarget>().Init(new Vector3(1, 0, 0), 120, axes: new Vector3(1, 0, 0), eased: EaseType.Both);
-        Motion.CreateInvokeChain((m) => m.OnEnd, posTarget3, test_renderers[3].Copy(posTarget3).Init(Vector3.zero));
+        Motion.CreateInvokeChain((m) => m.OnEnd, posTarget3, test_renderers[3].Copy(posTarget3).Init(Vector3.zero));*/
     }
 
     public void Update()

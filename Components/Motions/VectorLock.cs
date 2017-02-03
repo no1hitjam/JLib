@@ -8,7 +8,7 @@ public class VectorLock : Motion
     protected Func<Vector4> _getVector;
     protected Action<Vector4> _setVector;
 
-    protected Vector4 _target = Vector4.zero;
+    public Vector4 Target = Vector4.zero;
     private float _distance = 1;
     protected float _speed = .1f;
     protected bool _eased = true;
@@ -18,10 +18,10 @@ public class VectorLock : Motion
     {
         _getVector = getVector ?? _getVector;
         _setVector = setVector ?? _setVector;
-        _target = target ?? _target;
+        Target = target ?? Target;
         _speed = speed ?? _speed;
         _eased = eased ?? _eased;
-        _distance = Vector4.Distance(_target, _getVector());
+        _distance = Vector4.Distance(Target, _getVector());
 
         return this;
     }
@@ -33,7 +33,7 @@ public class VectorLock : Motion
             if (!_eased && _distance != 0) {
                 speed /= _distance;
             }
-            _setVector((_target - _getVector()) * speed + _getVector());
+            _setVector((Target - _getVector()) * speed + _getVector());
         }
     }
 

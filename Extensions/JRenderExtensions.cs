@@ -103,16 +103,20 @@ public static class JRenderExtensions
 
     public static SpriteRenderer Init(
         this SpriteRenderer spriteRenderer,
+        string name,
         Transform parent,
         Sprite sprite = null,
-        Color? color = null)
+        Color? color = null,
+        int? sortingOrder = null)
     {
+        spriteRenderer.GetOrAdd<ID>().Init(name);
         spriteRenderer.transform.SetParent(parent, false);
         spriteRenderer.sprite = sprite;
         if (color.HasValue) {
             spriteRenderer.color = color.Value;
-        } else {
-            spriteRenderer.color = Color.white;
+        }
+        if (sortingOrder.HasValue) {
+            spriteRenderer.sortingOrder = sortingOrder.Value;
         }
 
         return spriteRenderer;

@@ -5,15 +5,18 @@ public enum Dir { Right = 0, Up = 90, Left = 180, Down = 270 };
 public enum DDir { Right = 0, UpRight = 45, Up = 90, UpLeft = 135,
     Left = 180, DownLeft = 225, Down = 270, DownRight = 315 };
 
+public enum InputType { Press, Hold, Release };
+
 public struct InputData
 {
-
-    public Vector2 Press, Release;
+    public InputType Type;
+    public Vector2 StartPos;
+    public Vector2 Pos;
 
     /// <summary> degrees </summary>
     public float Angle { get
         {
-            return Vector2.Angle(Press, Release);
+            return Vector2.Angle(StartPos, Pos);
         }
     }
 
