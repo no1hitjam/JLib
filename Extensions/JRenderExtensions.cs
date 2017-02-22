@@ -29,21 +29,20 @@ public static class JRenderExtensions
         this Text text,
         Transform parent,
         string content = "",
-        float width = 400,
-        float height = 200,
-        int font_size = 100,
+        Vector2 size = default(Vector2),
+        int font_size = 50,
         string font = "Arial",
         Color? color = null,
         TextAnchor alignment = TextAnchor.MiddleCenter,
         JLib.TextFitMode? fit = null)
     {
-        text = new GameObject().AddComponent<Text>();
         text.transform.SetParent(parent, false);
 
         text.text = content;
-        text.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
+        text.GetComponent<RectTransform>().sizeDelta = size;
         text.fontSize = font_size;
         //text.font = Font(font);
+        text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         text.alignment = alignment;
 
         if (color.HasValue) {
@@ -57,12 +56,12 @@ public static class JRenderExtensions
             if (fit.Value == JLib.TextFitMode.ShrinkX || fit.Value == JLib.TextFitMode.StretchX) {
                 fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
                 if (fit.Value == JLib.TextFitMode.ShrinkX) {
-                    text.Add<RectShrinker>().Init(width, JLib.Axes(true, false, false));
+                    text.Add<RectShrinker>().Init(size.x, JLib.Axes(true, false, false));
                 }
             } else if (fit.Value == JLib.TextFitMode.ShrinkY || fit.Value == JLib.TextFitMode.StretchY) {
                 fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
                 if (fit.Value == JLib.TextFitMode.ShrinkY) {
-                    text.Add<RectShrinker>().Init(width, JLib.Axes(true, false, false));
+                    text.Add<RectShrinker>().Init(size.x, JLib.Axes(true, false, false));
                 }
             }
         } else {
@@ -75,22 +74,26 @@ public static class JRenderExtensions
 
 
     public static Image Init(
-        this Image image, 
-        Transform parent, 
+        this Image image,
+        Transform parent,
+        string name = null,
         Sprite sprite = null, 
         Color? color = null,
         Vector2 size = default(Vector2), 
-        Vector2 pivot = default(Vector2))
+        Vector2? pivot = null)
     {
         image.transform.SetParent(parent, false);
+        if (name != null) {
+            image.GetOrAdd<ID>().Init(name);
+        }
         image.sprite = sprite;
         if (color.HasValue) {
             image.color = color.Value;
-        } else {
-            image.color = Color.white;
         }
         image.SetSize(size);
-        image.SetPivot(pivot);
+        if (pivot.HasValue) {
+            image.SetPivot(pivot.Value);
+        }
 
         return image;
     }
@@ -103,14 +106,16 @@ public static class JRenderExtensions
 
     public static SpriteRenderer Init(
         this SpriteRenderer spriteRenderer,
-        string name,
         Transform parent,
+        string name = null,
         Sprite sprite = null,
         Color? color = null,
         int? sortingOrder = null)
     {
-        spriteRenderer.GetOrAdd<ID>().Init(name);
         spriteRenderer.transform.SetParent(parent, false);
+        if (name != null) {
+            spriteRenderer.GetOrAdd<ID>().Init(name);
+        }
         spriteRenderer.sprite = sprite;
         if (color.HasValue) {
             spriteRenderer.color = color.Value;
